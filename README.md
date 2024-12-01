@@ -58,6 +58,8 @@ $ cat code | sed 's/^/    /' | pbcopy
 ```text
 [LANGUAGE: Janet]
 
+26 lines with `wc -l`.
+
 # [Janet]()
 
 - [GitHub Repository](https://github.com/cideM/aoc2024-janet)
