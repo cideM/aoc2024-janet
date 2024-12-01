@@ -60,8 +60,6 @@ $ cat code | sed 's/^/    /' | pbcopy
 
 # [Janet]()
 
-60 lines of code according to `tokei`.
-
 - [GitHub Repository](https://github.com/cideM/aoc2024-janet)
 - [Topaz Paste]()
 ```
