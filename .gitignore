@@ -5,3 +5,4 @@ result
 *.txt
 .nvimrc
 jpm_tree
+!LICENSE.*
