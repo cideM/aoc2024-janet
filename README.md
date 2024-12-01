@@ -2,10 +2,10 @@
 
 ## Quickstart
 
-If you just want to run a day against the example or real input, save the input to a `.txt` file and pass it as an argument to the main program.
+If you just want to run a day against the example or real input, save the input to a `.txt` file and pipe it to the main program.
 
 ```shell
-$ janet d1/main.janet path/to/input.txt
+$ janet d1/main.janet < path/to/input.txt
 ```
 
 With a LISP-y language like Janet, the recommended approach is to connect your editor a REPL and interactively run the code. Here's how to start the REPL.
