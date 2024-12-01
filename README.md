@@ -62,7 +62,7 @@ $ cat code | sed 's/^/    /' | pbcopy
 
 60 lines of code according to `tokei`.
 
-- [GitHub Repository (INSERT HERE)](https://github.com/)
+- [GitHub Repository](https://github.com/cideM/aoc2024-janet)
 - [Topaz Paste]()
 ```
 
