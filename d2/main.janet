@@ -3,7 +3,7 @@
 (defn safe? [nums]
   (let [diffs (map (partial -) (slice nums 1) nums)]
     (and (or (all neg? diffs) (all pos? diffs))
-         (all (comp truthy? (partial get (range 0 4)) math/abs) diffs))))
+         (all (comp truthy? |(get (range 0 4) $) math/abs) diffs))))
 
 (defn without [xs i] (tuple ;(slice xs 0 i) ;(slice xs (inc i))))
 
