@@ -23,8 +23,8 @@
 
 (defn solve [input]
   (let [parsed (->> (string/trimr input) (peg/match parser) (filter struct?))
-        p1 (+ ;(map (comp product |($ :nums)) parsed))
-        p2 (+ ;(seq [{:do f :nums xs} :in parsed :when f] (* ;xs)))]
+        p1 (+ ;(seq [x :in parsed] (* ;(x :nums))))
+        p2 (+ ;(seq [x :in parsed :when (x :do)] (* ;(x :nums))))]
     [p1 p2]))
 
 (defn main [&] (->> (file/read stdin :all) solve pp))
