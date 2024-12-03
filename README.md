@@ -60,8 +60,6 @@ $ cat code | sed 's/^/    /' | pbcopy
 
 26 lines with `wc -l`.
 
-# [Janet]()
-
 - [GitHub Repository](https://github.com/cideM/aoc2024-janet)
 - [Topaz Paste]()
 ```
