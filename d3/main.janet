@@ -14,8 +14,7 @@
 
 (def parser
   (peg/compile
-    ~{:main (* (constant true :do) (some (* (to :until) (+ :do :dont :mul))))
-      :until (+ :do :dont :mul-pat)
+    ~{:main (* (constant true :do) (some (+ :do :dont :mul 1)))
       :do (* "do()" (constant true :do))
       :dont (* "don't()" (constant false :do))
       :mul (cmt (* (-> :do) (group :mul-pat)) ,mul-instr)
@@ -31,5 +30,6 @@
 
 (comment
   (solve "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))")
+  (->> (string/trimr (slurp "d3/in.txt")) (peg/match parser) (filter struct?) pp)
   (solve (slurp "d3/ex.txt"))
   (solve (slurp "d3/in.txt")))
