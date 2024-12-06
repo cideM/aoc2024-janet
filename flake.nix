@@ -28,6 +28,7 @@
             janet
             jpm
             nodePackages.prettier
+            graphviz
           ];
         };
       }

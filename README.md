@@ -14,16 +14,16 @@ With a LISP-y language like Janet, the recommended approach is to connect your e
 $ jpm -l janet -e "(import spork/netrepl) (netrepl/server)"
 ```
 
-## Progress (4/25)
+## Progress (6/25)
 
 |     | Janet  | Solution Comment                                                               |
 | --- | ------ | ------------------------------------------------------------------------------ |
 | 1   | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1h3vp6n/comment/lzv4qlv) |
 | 2   | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1h4ncyr/comment/m041ne0) |
 | 3   | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1h5frsp/comment/m06empm) |
-| 4   | :bell:  |                                                                                |
-| 5   | :zzz:  |                                                                                |
-| 6   | :zzz:  |                                                                                |
+| 4   | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1h689qf/comment/m0ctka8) |
+| 5   | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1h71eyz/comment/m0p2ml5) |
+| 6   | :bell: |                                                                                |
 | 7   | :zzz:  |                                                                                |
 | 8   | :zzz:  |                                                                                |
 | 9   | :zzz:  |                                                                                |
