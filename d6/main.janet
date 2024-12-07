@@ -4,35 +4,39 @@
 
 (defn move [[y x] [dy dx]] [(+ y dy) (+ x dx)])
 
-(defn turn [[y x]] [x (* -1 y)])
+(defn turn-right [[y x]] [x (* -1 y)])
 
-(defn find-next [grid pos startvec]
-  (var vec startvec)
-  (loop [_ :iterate true :until (->> (move pos vec) grid obstacle? not)]
-    (set vec (turn vec)))
-  vec)
+(defn find-next [grid [pos vec]]
+  (->> (map |[(move pos $) $]
+            [vec
+             (turn-right vec)
+             (turn-right (turn-right vec))
+             (turn-right (turn-right (turn-right vec)))])
+       (find (comp not obstacle? grid first))))
+
+(def arrow-to-vec {"^" [-1 0] ">" [0 1] "v" [1 0] "<" [0 -1]})
+
+(defn find-start [grid]
+  (->> (pairs grid)
+       (find (fn [[_ arrow]] (arrow-to-vec arrow)))))
 
 (defn run [grid]
   (var g (table/clone grid))
-  (let [[[start-y start-x] start-dir] (find (fn [[_ v]] (= "^" v)) (pairs grid))]
-    (var curpos [start-y start-x])
-    (var vec ({"^" [-1 0] ">" [0 1] "v" [1 0] "<" [0 -1]} start-dir))
-    (var seen @{[curpos vec] 1})
+  (let [[start-pos start-arrow] (find-start grid)]
+    (var pose [start-pos (arrow-to-vec start-arrow)])
+    (var seen @{pose 1})
     (loop [_ :iterate true
-           :until (or (> (seen [curpos vec]) 1) (not (get grid curpos)))
-           :let [[y x] curpos
-                 next-vec (find-next grid curpos vec)
-                 next-pos (move curpos next-vec)]]
-      (set curpos next-pos)
-      (set vec next-vec)
-      (update seen [next-pos next-vec] |(cond $ (inc $) 0)))
-    {:seen seen :exit (if (> (seen [curpos vec]) 1) :loop :oob)}))
-
-(defn make-grid [parsed-pairs]
-  (from-pairs (map (fn [[y x v]] [[y x] v]) parsed-pairs)))
+           :until (or (> (seen pose) 1)
+                      (not (get grid (first pose))))]
+      (set pose (find-next grid pose))
+      (update seen pose |(cond $ (inc $) 0)))
+    {:seen seen :exit (if (> (seen pose) 1) :loop :oob)}))
 
 (defn solve [input]
-  (let [grid (->> (string/trimr input) (peg/match parser) make-grid)
+  (let [grid (->> (string/trimr input)
+                  (peg/match parser)
+                  (map (fn [[y x v]] [[y x] v]))
+                  from-pairs)
         {:seen seen} (run grid)
         seen-locations (->> (keys seen)
                             (map (fn [[pos _]] [pos true]))
