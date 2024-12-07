@@ -1,42 +1,32 @@
 (def parser (peg/compile ~(split :s (any (group (* (line) (column) '1))))))
 
-(def neighbor-dir {"^" [-1 0] ">" [0 1] "v" [1 0] "<" [0 -1]})
-
 (defn obstacle? [s] (or (= s "O") (= s "#")))
 
 (defn move [[y x] [dy dx]] [(+ y dy) (+ x dx)])
 
-(defn find-next [grid pos startdir]
-  (var dir startdir)
-  (loop [_ :iterate true
-         :let [next (grid (move pos (neighbor-dir dir)))]
-         :until (not (obstacle? next))]
-    (set dir
-         (cond (= dir "^") ">"
-           (= dir ">") "v"
-           (= dir "v") "<"
-           (= dir "<") "^")))
-  dir)
+(defn turn [[y x]] [x (* -1 y)])
+
+(defn find-next [grid pos startvec]
+  (var vec startvec)
+  (loop [_ :iterate true :until (->> (move pos vec) grid obstacle? not)]
+    (set vec (turn vec)))
+  vec)
 
 (defn run [grid]
   (var g (table/clone grid))
-  (let [[[start-y start-x] start-dir] (find (fn [[_ v]] (neighbor-dir v)) (pairs grid))]
+  (let [[[start-y start-x] start-dir] (find (fn [[_ v]] (= "^" v)) (pairs grid))]
     (var curpos [start-y start-x])
-    (var curdir start-dir)
-    (var seen @{[curpos curdir] 1})
+    (var vec ({"^" [-1 0] ">" [0 1] "v" [1 0] "<" [0 -1]} start-dir))
+    (var seen @{[curpos vec] 1})
     (loop [_ :iterate true
-           :until (or (> (seen [curpos curdir]) 1)
-                      (not (get grid curpos)))
+           :until (or (> (seen [curpos vec]) 1) (not (get grid curpos)))
            :let [[y x] curpos
-                 next-dir (find-next grid curpos curdir)
-                 next-pos (move curpos (neighbor-dir next-dir))]]
-      (merge-into g {next-pos next-dir})
+                 next-vec (find-next grid curpos vec)
+                 next-pos (move curpos next-vec)]]
       (set curpos next-pos)
-      (set curdir next-dir)
-      (update seen [next-pos next-dir] (fn [n] (if (truthy? n) (inc n) 0))))
-    {:grid g
-     :seen seen
-     :exit (if (> (seen [curpos curdir]) 1) :loop :oob)}))
+      (set vec next-vec)
+      (update seen [next-pos next-vec] |(cond $ (inc $) 0)))
+    {:seen seen :exit (if (> (seen [curpos vec]) 1) :loop :oob)}))
 
 (defn make-grid [parsed-pairs]
   (from-pairs (map (fn [[y x v]] [[y x] v]) parsed-pairs)))
