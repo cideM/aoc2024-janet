@@ -26,13 +26,14 @@
         in-grid? (fn [[y x &opt]]
                    (and (>= y 1) (<= y max-y) (>= x 1) (<= x max-x)))
         antennas (filter (fn [[_ _ ch]] (not= ch ".")) g)
-        antinodes (gen-antinodes antennas)
-        antinodes-p2 (gen-antinodes antennas
+        antinodes (gen-antinodes antennas) antinodes-p2 (gen-antinodes antennas
                                     :len (max max-x max-y)
                                     :include-self true)
         p1 (->> (distinct antinodes) (filter in-grid?) length)
         p2 (->> (distinct antinodes-p2) (filter in-grid?) length)]
     [p1 p2]))
+
+(defn main [&] (->> (file/read stdin :all) solve pp))
 
 (comment
   (peg/match parser (slurp "d8/ex.txt"))
