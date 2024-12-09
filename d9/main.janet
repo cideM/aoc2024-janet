@@ -38,12 +38,14 @@
   arr)
 
 (defn checksum
-  "Convert a `0..111....22222` string into a checksum."
+  "Convert a diskmap (flat list of numbers and nils) into a checksum."
   [diskmap]
   (+ ;(seq [[i n] :pairs diskmap :when (truthy? n)] (* i n))))
 
 (defn to-diskmap
-  "Convert a list of file/space blocks into `0..111....22222` syntax."
+  "Convert a list of blocks into a flat list of numbers and nils. A :file
+  block of size 3 gets turned into the block ID repeated 3 times. A space
+  block is nil repeated :space-left times."
   [item]
   (if (= (item :type) :file)
     (array/new-filled (item :size) (item :id))
