@@ -31,7 +31,7 @@ $ jpm -l janet -e "(import spork/netrepl) (netrepl/server)"
 | 11  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hbm0al/comment/m1i5n8s) |
 | 12  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hcdnk0/comment/m1xbgkd) |
 | 13  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hd4wda/comment/m1xvl16) |
-| 14  | :zzz:  |                                                                                |
+| 14  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hdvhvu/comment/m22rs18) |
 | 15  | :zzz:  |                                                                                |
 | 16  | :zzz:  |                                                                                |
 | 17  | :zzz:  |                                                                                |
