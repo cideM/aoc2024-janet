@@ -20,6 +20,9 @@
       (reverse (seq [_ :iterate true :until (= 0 v) :let [rem (% v 2)]]
                  (set v (div v 2)) rem)))))
 
+# Janet doesn't have good support for 64 bit integers unfortunately, see
+# https://janet.zulipchat.com/#narrow/channel/399615-general/topic/Advent.20of.20Code
+
 (defn bxor-64 [a b]
   (to-decimal (bxor-binary (to-binary a) (to-binary b))))
 
