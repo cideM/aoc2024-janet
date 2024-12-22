@@ -14,7 +14,7 @@ With a LISP-y language like Janet, the recommended approach is to connect your e
 $ jpm -l janet -e "(import spork/netrepl) (netrepl/server)"
 ```
 
-## Progress (19/25)
+## Progress (20/25)
 
 |     | Janet  | Solution Comment                                                               |
 | --- | ------ | ------------------------------------------------------------------------------ |
@@ -37,7 +37,7 @@ $ jpm -l janet -e "(import spork/netrepl) (netrepl/server)"
 | 17  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hg38ah/comment/m37jllp) |
 | 18  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hguacy/comment/m2w99rc) |
 | 19  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hhlb8g/comment/m37j5me) |
-| 20  | :zzz:  |                                                                                |
+| 20  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hicdtb/comment/m39k4kv) |
 | 21  | :zzz:  |                                                                                |
 | 22  | :zzz:  |                                                                                |
 | 23  | :zzz:  |                                                                                |
