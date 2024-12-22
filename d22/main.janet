@@ -51,10 +51,10 @@
   (var win-prices @{})
   (let [seqs [n ;(take 2000 (gen n))]]
     (each secrets-win (windows seqs 5)
-      (let [[a_ b_ c_ d_ e_] (map |(% $ 10) secrets-win)
-            diffs [(- b_ a_) (- c_ b_) (- d_ c_) (- e_ d_)]]
+      (let [[a b c d e] (map |(% $ 10) secrets-win)
+            diffs [(- b a) (- c b) (- d c) (- e d)]]
         (when (not (get win-prices diffs))
-          (put win-prices diffs (% e_ 10)))))
+          (put win-prices diffs (% e 10)))))
     [(last seqs) win-prices]))
 
 (defn solve [input]
@@ -67,3 +67,4 @@
     [p1 p2]))
 
 (defn main [&] (->> (file/read stdin :all) solve pp))
+
