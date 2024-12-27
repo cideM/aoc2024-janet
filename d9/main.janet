@@ -26,9 +26,8 @@
   (loop [i :down-to [(dec (length arr)) 0]
          :let [cur (arr i)
                fit? |(and (= ($ :type) :space) (<= (cur :size) ($ :space-left)))
-               arr-before-cur (slice arr 0 i)
                free-space-idx (and (= :file (cur :type))
-                                   (find-index fit? arr-before-cur))]
+                                   (find-index fit? arr))]
          :when (truthy? free-space-idx)]
     (update arr free-space-idx
             |(do (array/push ($ :items) cur)
@@ -39,8 +38,7 @@
 
 (defn checksum
   "Convert a diskmap (flat list of numbers and nils) into a checksum."
-  [diskmap]
-  (+ ;(seq [[i n] :pairs diskmap :when (truthy? n)] (* i n))))
+  [diskmap] (+ ;(seq [[i n] :pairs diskmap :when (truthy? n)] (* i n))))
 
 (defn to-diskmap
   "Convert a list of blocks into a flat list of numbers and nils. A :file

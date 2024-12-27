@@ -14,7 +14,7 @@ With a LISP-y language like Janet, the recommended approach is to connect your e
 $ jpm -l janet -e "(import spork/netrepl) (netrepl/server)"
 ```
 
-## Progress (22/25)
+## Progress (25/25)
 
 |     | Janet  | Solution Comment                                                               |
 | --- | ------ | ------------------------------------------------------------------------------ |
@@ -38,11 +38,11 @@ $ jpm -l janet -e "(import spork/netrepl) (netrepl/server)"
 | 18  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hguacy/comment/m2w99rc) |
 | 19  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hhlb8g/comment/m37j5me) |
 | 20  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hicdtb/comment/m39k4kv) |
-| 21  | :zzz:  |                                                                                |
-| 22  | :zzz:  | [Link](https://www.reddit.com/r/adventofcode/comments/1hjroap/comment/m39t96b) |
-| 23  | :zzz:  | [Link](https://www.reddit.com/r/adventofcode/comments/1hkgj5b/comment/m3h4cfl) |
-| 24  | :zzz:  |                                                                                |
-| 25  | :zzz:  |                                                                                |
+| 21  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hj2odw/comment/m40ooam) |
+| 22  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hjroap/comment/m39t96b) |
+| 23  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hkgj5b/comment/m3h4cfl) |
+| 24  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hl698z/comment/m3q6o15) |
+| 25  | :bell: | [Link](https://www.reddit.com/r/adventofcode/comments/1hlu4ht/comment/m40owtt) |
 
 ## Make Reddit Code Snippet
 
