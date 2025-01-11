@@ -53,6 +53,12 @@ $ cat code | sed 's/^/    /' | xsel -b
 $ cat code | sed 's/^/    /' | pbcopy
 ```
 
+To copy snippets from code directly, select it and then run:
+
+```
+:'<,'>w !sed 's/^/    /' | pbcopy
+```
+
 ## Reddit Comment Template
 
 ```text
