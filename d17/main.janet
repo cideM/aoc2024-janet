@@ -1,31 +1,5 @@
 (def parser (peg/compile ~(some (+ (number :d+) 1))))
 
-(defn to-decimal [bin]
-  (sum (seq [i :down-to [(dec (length bin)) 0]
-             :let [pow (- (dec (length bin)) i)]
-             :when (= (bin i) 1)]
-         (math/pow 2 pow))))
-
-(defn bxor-binary [a b]
-  (let [[longer shorter] (if (> (length a) (length b)) [a b] [b a])
-        rev-longer (reverse longer)
-        rev-shorter (reverse shorter)]
-    (reverse (seq [[i n] :pairs rev-longer
-                   :let [n2 (or (get rev-shorter i) 0)]] (bxor n n2)))))
-
-(defn to-binary [n]
-  (if (= 0 n) [0]
-    (do
-      (var v n)
-      (reverse (seq [_ :iterate true :until (= 0 v) :let [rem (% v 2)]]
-                 (set v (div v 2)) rem)))))
-
-# Janet doesn't have good support for 64 bit integers unfortunately, see
-# https://janet.zulipchat.com/#narrow/channel/399615-general/topic/Advent.20of.20Code
-
-(defn bxor-64 [a b]
-  (to-decimal (bxor-binary (to-binary a) (to-binary b))))
-
 (defn run [[a b c] program]
   (var ip 0)
   (var regs @{"a" a "b" b "c" c})
@@ -40,10 +14,13 @@
                         (math/pow 2)
                         (div (regs "a"))
                         (put regs "a"))
-      (= 1 opcode) (put regs "b" (bxor-64 (regs "b") operand))
+      (= 1 opcode) (put regs "b" (as-> (regs "b") _
+                                       (bxor (int/u64 _) operand)
+                                       (int/to-number _)))
       (= 2 opcode) (put regs "b" (% ((combo-ops operand)) 8))
       (= 3 opcode) (when (not= 0 (regs "a")) (set ip operand))
-      (= 4 opcode) (put regs "b" (bxor-64 (regs "b") (regs "c")))
+      (= 4 opcode) (put regs "b" (int/to-number (bxor (int/u64 (regs "b"))
+                                                      (int/u64 (regs "c")))))
       (= 5 opcode) (array/push out (string (% ((combo-ops operand)) 8)))
       (= 6 opcode) (->> ((combo-ops operand))
                         (math/pow 2)
