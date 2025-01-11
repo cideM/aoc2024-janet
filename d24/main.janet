@@ -1,43 +1,24 @@
 (def parser (peg/compile
-              ~{:main (* :init-block "\n" :conns-block)
-                :gate (repeat 3 (range "09" "az"))
-                :op (+ "AND" "XOR" "OR")
-                :init (group (* ':gate ":" :s (number :d+)))
-                :init-block (group (some (* :init "\n")))
-                :conn (group (* ':gate :s ':op :s ':gate :s "->" :s ':gate))
-                :conns-block (group (some (* :conn (? "\n"))))}))
+              ~{:main (* (sub (to :sep) (group (split "\n" :init)))
+                         :sep
+                         (group (split "\n" :conn)))
+                :gate (* (range "az") (2 (range "09")))
+                :sep (2 :s) # separates init and connection block
+                :init (* ':gate ":" :s (number :d+))
+                :conn (group (* ':gate :s
+                                '(+ "AND" "XOR" "OR") :s
+                                ':gate " -> "
+                                ':gate))}))
 
-# Janet doesn't have good support for 64 bit integers unfortunately, see
-# https://janet.zulipchat.com/#narrow/channel/399615-general/topic/Advent.20of.20Code
-
-# ========= Start of 64 bit workaround
+(comment
+  (pp (string/trimr (slurp "d24/ex.txt")))
+  (peg/match parser (string/trimr (slurp "d24/ex.txt"))))
 
 (defn to-decimal [bin]
   (sum (seq [i :down-to [(dec (length bin)) 0]
              :let [pow (- (dec (length bin)) i)]
              :when (= (bin i) 1)]
          (math/pow 2 pow))))
-
-(defn bxor-binary [a b]
-  (let [[longer shorter] (if (> (length a) (length b)) [a b] [b a])
-        rev-longer (reverse longer)
-        rev-shorter (reverse shorter)]
-    (reverse (seq [[i n] :pairs rev-longer
-                   :let [n2 (or (get rev-shorter i) 0)]] (bxor n n2)))))
-
-(defn bor-binary [a b]
-  (let [[longer shorter] (if (> (length a) (length b)) [a b] [b a])
-        rev-longer (reverse longer)
-        rev-shorter (reverse shorter)]
-    (reverse (seq [[i n] :pairs rev-longer
-                   :let [n2 (or (get rev-shorter i) 0)]] (bor n n2)))))
-
-(defn band-binary [a b]
-  (let [[longer shorter] (if (> (length a) (length b)) [a b] [b a])
-        rev-longer (reverse longer)
-        rev-shorter (reverse shorter)]
-    (reverse (seq [[i n] :pairs rev-longer
-                   :let [n2 (or (get rev-shorter i) 0)]] (band n n2)))))
 
 (defn to-binary [n]
   (if (= 0 n) [0]
@@ -46,18 +27,7 @@
       (reverse (seq [_ :iterate true :until (= 0 v) :let [rem (% v 2)]]
                  (set v (div v 2)) rem)))))
 
-(defn bor-64 [a b]
-  (to-decimal (bor-binary (to-binary a) (to-binary b))))
-
-(defn bxor-64 [a b]
-  (to-decimal (bxor-binary (to-binary a) (to-binary b))))
-
-(defn band-64 [a b]
-  (to-decimal (band-binary (to-binary a) (to-binary b))))
-
-# ========= End of 64 bit workaround
-
-(def ops {"AND" band-64 "OR" bor-64 "XOR" bxor-64})
+(def ops {"AND" band "OR" bor "XOR" bxor})
 
 (defn results
   "Returns the binary numbers stored in the various x00, z01, ... keys"
@@ -194,9 +164,6 @@
       (spit "g.dot" (digraph (filter-conns conns z-values-different)
                              z-values-different)))))
 
-(comment
-  (generate-debug-graph (slurp "d24/in.txt")))
-
 (defn solve [input]
   (let [[init conns] (->> (string/trimr input) (peg/match parser))
         state (from-pairs init)
@@ -209,4 +176,4 @@
 (defn main [&] (->> (file/read stdin :all) solve pp))
 
 (comment
-  (peg/match parser (string/trimr (slurp "d24/ex.txt"))))
+  (generate-debug-graph (slurp "d24/in.txt")))

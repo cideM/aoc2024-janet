@@ -6,3 +6,4 @@ result
 .nvimrc
 jpm_tree
 !LICENSE.*
+*.dot
