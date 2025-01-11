@@ -7,31 +7,18 @@
   (loop [_ :iterate true :until (>= ip (length program))
          :let [opcode (program ip)
                operand (program (inc ip))
-               combo-ops {0 |0 1 |1 2 |2 3 |3 4 |(regs "a") 5 |(regs "b")
-                          6 |(regs "c")}]]
-    (cond
-      (= 0 opcode) (->> ((combo-ops operand))
-                        (math/pow 2)
-                        (div (regs "a"))
-                        (put regs "a"))
-      (= 1 opcode) (put regs "b" (as-> (regs "b") _
-                                       (bxor (int/u64 _) operand)
-                                       (int/to-number _)))
-      (= 2 opcode) (put regs "b" (% ((combo-ops operand)) 8))
-      (= 3 opcode) (when (not= 0 (regs "a")) (set ip operand))
-      (= 4 opcode) (put regs "b" (int/to-number (bxor (int/u64 (regs "b"))
-                                                      (int/u64 (regs "c")))))
-      (= 5 opcode) (array/push out (string (% ((combo-ops operand)) 8)))
-      (= 6 opcode) (->> ((combo-ops operand))
-                        (math/pow 2)
-                        (div (regs "a"))
-                        (put regs "b"))
-      (= 7 opcode) (->> ((combo-ops operand))
-                        (math/pow 2)
-                        (div (regs "a"))
-                        (put regs "c")))
-    (if (and (= 3 opcode) (not= 0 (regs "a")))
-      ()
+               combo {0 0 1 1 2 2 3 3 4 (regs "a") 5 (regs "b") 6 (regs "c")}
+               bxor64 |(int/to-number (bxor (int/u64 $) (int/u64 $1)))]]
+    (match opcode
+      0 (->> (combo operand) (math/pow 2) (div (regs "a")) (put regs "a"))
+      1 (put regs "b" (bxor64 (regs "b") operand))
+      2 (put regs "b" (% (combo operand) 8))
+      3 (when (not= 0 (regs "a")) (set ip operand))
+      4 (put regs "b" (bxor64 (regs "b") (regs "c")))
+      5 (array/push out (string (% (combo operand) 8)))
+      6 (->> (combo operand) (math/pow 2) (div (regs "a")) (put regs "b"))
+      7 (->> (combo operand) (math/pow 2) (div (regs "a")) (put regs "c")))
+    (when (not (and (= 3 opcode) (not= 0 (regs "a"))))
       (+= ip 2)))
   [out regs])
 
@@ -60,6 +47,5 @@
 (defn main [&] (->> (file/read stdin :all) solve pp))
 
 (comment
-  (math/pow 2 12)
   (solve (slurp "d17/ex.txt"))
   (peg/match parser (slurp "d17/ex.txt")))
