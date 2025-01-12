@@ -59,14 +59,12 @@
 (defn num-code-to-dir-code [code]
   (mapcat |(arrow-path ;$) (map tuple ["A" ;code] code)))
 
-(defn num-path [from to]
-  (let [paths
-        {"A" {"A" [] "^" ["<"] ">" ["v"] "v" ["<" "v"] "<" ["v" "<" "<"]}
-         "^" {"^" [] "A" [">"] ">" ["v" ">"] "v" ["v"] "<" ["v" "<"]}
-         "<" {"<" [] "v" [">"] "^" [">" "^"] ">" [">" ">"] "A" [">" ">" "^"]}
-         "v" {"v" [] "<" ["<"] ">" [">"] "^" ["^"] "A" ["^" ">"]}
-         ">" {">" [] "A" ["^"] "^" ["<" "^"] "v" ["<"] "<" ["<" "<"]}}]
-    [;(get-in paths [from to]) "A"]))
+(def num-path
+  {"A" {"A" [] "^" ["<"] ">" ["v"] "v" ["<" "v"] "<" ["v" "<" "<"]}
+   "^" {"^" [] "A" [">"] ">" ["v" ">"] "v" ["v"] "<" ["v" "<"]}
+   "<" {"<" [] "v" [">"] "^" [">" "^"] ">" [">" ">"] "A" [">" ">" "^"]}
+   "v" {"v" [] "<" ["<"] ">" [">"] "^" ["^"] "A" ["^" ">"]}
+   ">" {">" [] "A" ["^"] "^" ["<" "^"] "v" ["<"] "<" ["<" "<"]}})
 
 (defn numeric [code] (scan-number (string ;(drop -1 code))))
 
@@ -75,15 +73,12 @@
 (defn compute [code depth]
   (let [k (string ;code depth)]
     (or (get cache k)
-        (do
-          (->> (seq [[a b] :in (map tuple ["A" ;code] code)
-                     :let [path (num-path a b)]]
-                 (if (= 0 depth)
-                   (length path)
-                   (compute path (dec depth))))
-               sum
-               (put cache k))
-          (get cache k)))))
+        (let [next-lengths (seq [[a b] :in (map tuple ["A" ;code] code)
+                                 :let [path [;(get-in num-path [a b]) "A"]]]
+                             (if (= 0 depth)
+                               (length path)
+                               (compute path (dec depth))))]
+          ((put cache k (sum next-lengths)) k)))))
 
 (defn solve [input]
   (let [codes (peg/match ~(split :s (group (some '1))) input)
